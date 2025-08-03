@@ -40,6 +40,24 @@ You can find this AI implementation and sample outputs in the `/web-ai-version/`
 | `/Unity-Screenshots/` | Screenshots from the AR Unity app (in development) |
 | `/App-Demo-Video/` | Demo video showing the app interface |
 | `/Satellite-AR/` | Satellite AR model used for visualization |
+| `/Website-Demo-Video/` | Demo video showing the WebApp Interface |
+
+
+---
+##🛠️ Tech Stack
+
+| Category         | Technology/Tool                                | Description                                                      |
+| ---------------- | ---------------------------------------------- | ---------------------------------------------------------------- |
+| **Frontend**     | **Next.js (React)**                            | Web-based UI for uploading & viewing detection results           |
+|                  | **Tailwind CSS**                               | For clean, responsive UI styling                                 |
+| **Backend**      | **Python (Flask)**                             | REST API for serving YOLOv8 detection results                    |
+| **AI Model**     | **YOLOv8 (Ultralytics)**                       | Real-time object detection model trained on synthetic space data |
+| **AR Interface** | **Unity + AR Foundation**                      | Mobile AR rendering of detection overlays                        |
+| **Data Source**  | **Falcon (Duality AI)**                        | Synthetic 3D space station environment for training              |
+| **Storage**      | output_results/`, `public/` folders           | Store image outputs and detection results                         |
+| **Dev Tools**    | **Visual Studio Code**, Git, GitHub            | Development, version control, and collaboration                  |
+| **Build Tools**  | pnpm`, `npm`, `pip`, `start.bat` / `start.sh` | Build and run project components (web & backend)                  |
+
 
 ---
 
