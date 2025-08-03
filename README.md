@@ -40,7 +40,6 @@ You can find this AI implementation and sample outputs in the `/web-ai-version/`
 | `/Unity-Screenshots/` | Screenshots from the AR Unity app (in development) |
 | `/App-Demo-Video/` | Demo video showing the app interface |
 | `/Satellite-AR/` | Satellite AR model used for visualization |
-| `train.py`, `predict.py` | YOLOv8 training and prediction files |
 | `README.md` | You’re here! |
 
 ---
