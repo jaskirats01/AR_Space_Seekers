@@ -1,99 +1,86 @@
+<p align="center"><img src="docs/assets/project-card.svg" width="760" alt="AR Space Seekers — space-station equipment detection and AR exploration" /></p>
 
-# 🛰️ AR-Assist: Real-Time Object Detection in Space Stations
+# AR-Assist · AR_Space_Seekers
 
-**AR-Assist** is an augmented reality (AR) application built in **Unity** to help astronauts visually detect and locate critical tools and safety equipment — specifically:
-- 🧯 Fire Extinguisher  
-- 🧰 Toolkit  
-- 🧪 Oxygen Cylinder  
+A team project exploring computer-vision assistance for identifying **fire extinguishers, toolboxes and oxygen tanks** in space-station imagery.
 
-This system uses a **YOLOv8 AI model trained on synthetic space station data** from Duality AI’s Falcon platform. It overlays real-time object detections in AR for efficient and accurate visual assistance inside space environments.
+This repository includes the web implementation and the team's AR concept/demo assets.
 
----
+[Setup and API guide](docs/DEVELOPMENT.md) · [Model status and limitations](docs/MODEL.md)
 
-## 🚧 Project Status
+## Implementation
 
-🚨 The Unity-based mobile AR application is **still under development** and currently **not deployed**. However, we have included the following resources in this repository for review:
+The web application uses **Next.js, React and TypeScript** to upload images and display detection results. A Next.js route forwards requests to a **Python FastAPI** backend that loads `public/models/best.pt` with Ultralytics YOLO. Pillow renders annotated images. The frontend uses Tailwind CSS and shadcn/ui components.
 
-- 📸 Screenshots of the Unity AR application
-- 📽️ A demo video showing the app interface and concept
-- 🛰️ A 3D AR visual of a **satellite model** (used in early visualization)
-- 🧠 YOLOv8 AI detection results and working code (hosted as a web app)
+The original project notes describe YOLOv8 training on synthetic space-station imagery from Duality AI's Falcon platform. Training data, a reproducible training pipeline and measured mAP results are not included here, so no numeric model-quality claim is made.
 
----
+```mermaid
+flowchart LR
+    A[Image upload] --> B[Next.js /api/detect]
+    B --> C[FastAPI /detect]
+    C --> D[YOLO best.pt]
+    D --> E[Boxes + confidence + annotated image]
+    E --> A
+```
 
-## 🌐 Web Application (AI-Only)
+## Quick start
 
-Since the Unity AR build is in progress, we’ve shared a **fully working AI web application repository** as a placeholder:
-- Includes the **trained YOLOv8 model**
-- Object detection running on real/synthetic test images
-- mAP@0.5: **[Insert Score Here]**
+```bash
+git clone https://github.com/jaskirats01/AR_Space_Seekers.git
+cd AR_Space_Seekers
+python -m venv .venv
+# Activate the virtual environment for your shell.
+python -m pip install -r requirements.txt
+npm ci
+```
 
-You can find this AI implementation and sample outputs in the `/web-ai-version/` folder.
+From the repository root, run the model backend in one terminal:
 
----
+```bash
+python api/detect.py
+```
 
-## 📂 Folder Overview
-(All these are inside demo folder)
+In a second terminal:
 
-| Folder/File | Description |
-|-------------|-------------|
-| `/Unity-Screenshots/` | Screenshots from the AR Unity app (in development) |
-| `/App-Demo-Video/` | Demo video showing the app interface |
-| `/Satellite-AR/` | Satellite AR model used for visualization |
-| `/Website-Demo-Video/` | Demo video showing the WebApp Interface |
+```bash
+npm run dev
+```
 
+Use the virtual environment in the Python terminal. Open `http://localhost:3000`; the backend defaults to `http://localhost:8000`. Verify `/health` and `/info` directly on the Python server before interpreting detections. See the [development guide](docs/DEVELOPMENT.md) for configuration and troubleshooting.
 
----
-##🛠️ Tech Stack
+## Current demo behaviour
 
-| Category         | Technology/Tool                                | Description                                                      |
-| ---------------- | ---------------------------------------------- | ---------------------------------------------------------------- |
-| **Frontend**     | **Next.js (React)**                            | Web-based UI for uploading & viewing detection results           |
-|                  | **Tailwind CSS**                               | For clean, responsive UI styling                                 |
-| **Backend**      | **Python (Flask)**                             | REST API for serving YOLOv8 detection results                    |
-| **AI Model**     | **YOLOv8 (Ultralytics)**                       | Real-time object detection model trained on synthetic space data |
-| **AR Interface** | **Unity + AR Foundation**                      | Mobile AR rendering of detection overlays                        |
-| **Data Source**  | **Falcon (Duality AI)**                        | Synthetic 3D space station environment for training              |
-| **Storage**      | output_results/`, `public/` folders           | Store image outputs and detection results                         |
-| **Dev Tools**    | **Visual Studio Code**, Git, GitHub            | Development, version control, and collaboration                  |
-| **Build Tools**  | pnpm`, `npm`, `pip`, `start.bat` / `start.sh` | Build and run project components (web & backend)                  |
+The frontend can fall back to fixed mock detections if inference fails. Successful-looking boxes alone do not establish that the model ran. The alternate Python scripts also have simulation behaviour. Use `api/detect.py` and inspect backend health/logs when testing actual inference; see [model status](docs/MODEL.md).
+
+## Demo gallery
+
+![Unity application upload interface](DEMO/Unity-Screenshot/App-%20Upload%20section.jpg)
+
+- [Application demo](DEMO/App-Demo-Video/App-Demo-Live-Update.mp4)
+- [Satellite AR concept demo](DEMO/Satellite-AR/Satellite-AR-Demo.mp4)
+- [Web upload workflow recording](DEMO/Website-Demo-Video/Website-Demo-Upload-Function.mp4)
+
+These recordings document the project at the time of capture; the Unity mobile application remains a work in progress.
 
 
----
+## Project structure
 
-## 📌 Object Classes
+| Path | Purpose |
+|---|---|
+| `app/` and `components/` | Next.js UI and server route |
+| `api/detect.py` | Model-backed FastAPI entry point |
+| `api/real-detect.py`, `api/simple-detect.py` | Alternative experiments with fallback/demo behaviour |
+| `lib/pytorch-processor.ts` | Frontend request handling and fallback |
+| `public/models/` | Model artifacts |
+| `output_results/` | Sample/generated annotated images |
+| `test-setup.py`, `test-image-output.py` | Manual diagnostic scripts |
 
-The model is trained to detect:
-- 🔴 Fire Extinguisher
-- 🟢 Oxygen Cylinder
-- 🔧 Toolkit
+There is no `/web-ai-version/` directory; the web application lives at the repository root.
 
----
+## Team and status
 
-## 🧠 AI Model Details
+Created by **Team ARSpaceSeekers** for **BuildWithDelhi 2.0**. Team leader: **Akash Jha**, as credited in the original project documentation. The Unity AR application remains under development.
 
-- Architecture: YOLOv8  
-- Trained on: Falcon synthetic space station data  
-- Evaluation: mAP@0.5 = **[Insert Value]**  
-- Deployment: Web interface (in `/web-ai-version/`)
+## Next work
 
----
-
-## ✨ Coming Soon
-
-- Full mobile AR deployment
-- Live camera detection in Unity with Flask backend
-- Cross-platform build (Android + iOS)
-- Model update via Falcon API integration
-
----
-
-## 🙌 Contributors
-
-Made by **Team ARSpaceSeekers**  
-Leader: *Akash Jha*  
-BuildWithDelhi 2.0 Hackathon
-
----
-
-> 🚀 Stay tuned for updates! This is a work-in-progress aimed at merging AI and AR for real-time astronaut assistance in space stations.
+Make demo mode visible, validate class mapping against model metadata, document training provenance and evaluation, add API/UI tests, and address build/type-check errors before treating the application as deployment-ready.
